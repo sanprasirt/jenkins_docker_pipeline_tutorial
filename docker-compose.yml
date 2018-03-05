@@ -1,0 +1,28 @@
+version: "3.4"
+
+services:
+  myjenkins:
+    build:
+      context: .
+    image: myjenkins
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysonar
+      - artifactory
+    links:
+      - mysonar
+      - artifactory
+    secrets:
+      - artifactoryPassword
+  mysonar:
+    image: sonarqube:latest
+    ports:
+      - "9000:9000"
+  artifactory:
+    image: docker.bintray.io/jfrog/artifactory-oss:5.4.4
+    ports:
+      - "8082:8081"
+secrets:
+  artifactoryPassword:
+    file: ./secrets/artifactoryPassword
